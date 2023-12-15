@@ -1,0 +1,58 @@
+{% extends 'core/padre.html' %}
+
+
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<h3 class="text-center">PRODUCTOS </h3>
+
+<form class="w-50 shadow mx-auto p-4 m-3 text-center" method="post" action="{% url 'core:guardar' %}">
+
+    {% csrf_token %}
+
+    Nombre:<input type="text" name="nombre" class="form-control my-2" required>
+
+    Descripcion: <textarea name="descripcion" class="form-control my-2" cols="30" rows="5"></textarea>
+
+    Precio:<input type="number" name="precio" class="form-control my-2" required>
+
+    <input type="submit" value="Guardar" class="btn btn-primary">
+</form>
+
+<table class="table table-info w-75 mx-auto">
+    <tr class="table table-dark">
+        <th>Nombre</th>
+        <th>Descripcion</th>
+        <th>Precio</th>
+        <th colspan="2"></th>
+    </tr>
+    {% for producto in productos %}
+    <tr>
+        <td>{{producto.nombre}}</td>
+        <td>{{producto.descripcion}}</td>
+        <td>{{producto.precio}}</td>
+        <td>
+            <form action="{% url 'core:eliminar' producto.id %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-danger" onclick="return confirm('Eliminar el producto seleccionado?')">
+                    Eliminar
+                </button>
+            </form>
+        </td>
+        <td>
+            <form action="{% url 'core:detalle' producto.id %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-warning" >
+                    Modicar
+                </button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+{% endblock content %}
